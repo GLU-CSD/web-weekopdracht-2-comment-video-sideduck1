@@ -8,7 +8,7 @@ session_start();
     $dbhost = "localhost";
     $dbuser = "root";
     $dbpass = "";
-    $dbname = "youtube-clone";
+    $dbname = "123";
 
 $con = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 
