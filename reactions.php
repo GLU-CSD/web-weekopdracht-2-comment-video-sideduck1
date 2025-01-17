@@ -1,25 +1,26 @@
 <?php
 class Reactions
 {
-    static function setReaction($postArray){
+    static function setReaction($postArray)
+    {
         global $con;
         $array = [];
         if (!empty($postArray)) {
 
             if (isset($postArray['name']) && $postArray['name'] != '') {
                 $name = stripslashes(trim($postArray['name']));
-            }else{
+            } else {
                 $array['error'][] = "Name not set in array";
             }
             if (isset($postArray['email']) && filter_var($postArray['email'], FILTER_VALIDATE_EMAIL)) {
                 $email = stripslashes(trim($postArray['email']));
-            }else{
+            } else {
                 $array['error'][] = "Invalid email format";
             }
 
-            if (isset($postArray['message']) && $postArray['message'] != '') {
-                $message = stripslashes(trim($postArray['message']));
-            }else{
+            if (isset($postArray['comment']) && $postArray['comment'] != '') {
+                $message = stripslashes(trim($postArray['comment']));
+            } else {
                 $array['error'][] = "Message not set in array";
             }
 
@@ -27,38 +28,40 @@ class Reactions
 
                 $srqry = $con->prepare("INSERT INTO reactions (name,email,message) VALUES (?,?,?);");
                 if ($srqry === false) {
-                    prettyDump( mysqli_error($con) );
+                    prettyDump(mysqli_error($con));
                 }
-                
-                $srqry->bind_param('sss',$name,$email,$message);
+$srqry->bind_param('sss', $name, $email, $message);
                 if ($srqry->execute() === false) {
-                    prettyDump( mysqli_error($con) );
-                }else{
+                    prettyDump(mysqli_error($con));
+                } else {
                     $array['succes'] = "Reaction save succesfully";
                 }
-            
+
                 $srqry->close();
             }
 
             return $array;
         }
     }
-    
-    static function getReactions(){
+
+    static function getReactions()
+    {
         global $con;
         $array = [];
-        $grqry = $con->prepare("SELECT id,name,email FROM reactions;");
-        if($grqry === false) {
-            prettyDump( mysqli_error($con) );
-        } else{
-            $grqry->bind_result($id,$name,$email);
-            if($grqry->execute()){
+        $grqry = $con->prepare("SELECT id,name,email, message FROM reactions;");
+        if ($grqry === false) {
+            prettyDump(mysqli_error($con));
+        } else {
+            $grqry->bind_result($id, $name, $message, $email);
+            if ($grqry->execute()) {
                 $grqry->store_result();
-                while($grqry->fetch()){
+                while ($grqry->fetch()) {
                     $array[] = [
                         'id' => $id,
                         'name' => $name,
-                        'email'=> $email
+                        'email' => $email,
+                        'message' => $message
+
                     ];
                 }
             }
@@ -67,4 +70,3 @@ class Reactions
         return $array;
     }
 }
-
