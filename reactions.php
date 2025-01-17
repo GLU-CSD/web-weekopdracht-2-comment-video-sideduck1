@@ -17,9 +17,8 @@ class Reactions
             } else {
                 $array['error'][] = "Invalid email format";
             }
-
-            if (isset($postArray['comment']) && $postArray['comment'] != '') {
-                $message = stripslashes(trim($postArray['comment']));
+if (isset($postArray['commentaar']) && $postArray['commentaar'] != '') {
+                $message = stripslashes(trim($postArray['commentaar']));
             } else {
                 $array['error'][] = "Message not set in array";
             }
@@ -30,7 +29,8 @@ class Reactions
                 if ($srqry === false) {
                     prettyDump(mysqli_error($con));
                 }
-$srqry->bind_param('sss', $name, $email, $message);
+
+                $srqry->bind_param('sss', $name, $email, $message);
                 if ($srqry->execute() === false) {
                     prettyDump(mysqli_error($con));
                 } else {
